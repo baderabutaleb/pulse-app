@@ -142,3 +142,8 @@ curl -X POST "http://localhost:8000/api/admin/generate?target_date=2026-05-11"
 1. Open the app in Safari
 2. Tap Share → "Add to Home Screen"
 3. App opens fullscreen with no browser chrome
+
+---
+
+### URL
+'https://pulse-frontend-production-0223.up.railway.app'
