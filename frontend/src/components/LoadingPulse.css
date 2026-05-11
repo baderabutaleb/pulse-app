@@ -1,0 +1,104 @@
+/* ─── Shimmer animation ─── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.10) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite linear;
+  border-radius: 6px;
+}
+
+/* ─── Layout ─── */
+.loading-pulse {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.skeleton-counter {
+  width: 48px;
+  height: 14px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.skeleton-stack {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── Card skeleton ─── */
+.skeleton-card {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--card-radius);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 4px solid rgba(255, 255, 255, 0.08);
+  padding: 32px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.skeleton-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.skeleton-emoji {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.skeleton-category {
+  width: 80px;
+  height: 10px;
+  border-radius: 4px;
+}
+
+.skeleton-headline {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+}
+
+.skeleton-line {
+  height: 20px;
+}
+
+.skeleton-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.skeleton-source {
+  width: 90px;
+  height: 28px;
+  border-radius: 100px;
+  margin-top: 8px;
+}

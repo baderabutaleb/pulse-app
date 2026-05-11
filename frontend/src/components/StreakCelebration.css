@@ -1,0 +1,109 @@
+/* ─── Overlay ─── */
+@keyframes overlay-in  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes overlay-out { from { opacity: 1; } to { opacity: 0; } }
+
+.celebration-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: overlay-in 0.35s ease forwards;
+}
+
+.celebration-overlay--out {
+  animation: overlay-out 0.4s ease forwards;
+}
+
+/* ─── Center content ─── */
+.celebration-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─── Fire + particles ─── */
+.celebration-fire-wrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+@keyframes fire-spring {
+  0%   { transform: scale(0) rotate(-10deg); }
+  55%  { transform: scale(1.25) rotate(5deg); }
+  75%  { transform: scale(0.92) rotate(-3deg); }
+  90%  { transform: scale(1.05) rotate(1deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.celebration-fire {
+  font-size: 80px;
+  line-height: 1;
+  animation: fire-spring 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  display: block;
+}
+
+/* ─── Radial particles ─── */
+@keyframes particle-burst {
+  0%   { opacity: 1; transform: translate(-50%, -50%) rotate(var(--angle)) translateY(0px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-70px) scale(0.3); }
+}
+
+.celebration-particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff9500;
+  opacity: 0;
+  animation: particle-burst 0.75s ease-out forwards;
+  animation-delay: 0.25s;
+}
+
+/* Alternate colours for visual variety */
+.celebration-particle:nth-child(3n)   { background: #ffcc00; width: 6px; height: 6px; }
+.celebration-particle:nth-child(3n+1) { background: #ff6b00; width: 10px; height: 10px; }
+
+/* ─── Text ─── */
+@keyframes text-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.celebration-number {
+  font-family: var(--font-body);
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1;
+  animation: text-rise 0.4s ease 0.5s both;
+}
+
+.celebration-label {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  animation: text-rise 0.4s ease 0.6s both;
+}
+
+.celebration-message {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 8px;
+  animation: text-rise 0.4s ease 0.75s both;
+}
