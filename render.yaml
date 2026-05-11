@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: pulse-api
+    name: pulse-app
     env: python
     rootDir: backend
     buildCommand: pip install -r requirements.txt
