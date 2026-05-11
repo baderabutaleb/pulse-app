@@ -1,6 +1,6 @@
-from datetime import date
+from datetime import datetime, timezone
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from pydantic import BaseModel
 from database import supabase
 
@@ -8,58 +8,53 @@ router = APIRouter()
 
 
 class StreakPingBody(BaseModel):
-    device_id: str
+    user_id: str
+    date: str  # YYYY-MM-DD
+
+
+@router.get("/api/streak")
+async def get_streak(user_id: str = Query(...)):
+    result = (
+        supabase.table("streaks")
+        .select("user_id, streak_count, last_celebrated_date")
+        .eq("user_id", user_id)
+        .maybe_single()
+        .execute()
+    )
+    if result.data:
+        return result.data
+    return {"user_id": user_id, "streak_count": 0, "last_celebrated_date": None}
 
 
 @router.post("/api/streak/ping")
 async def ping_streak(body: StreakPingBody):
-    today = date.today()
-    device_id = body.device_id
-
     result = (
-        supabase.table("user_streaks")
-        .select("*")
-        .eq("device_id", device_id)
+        supabase.table("streaks")
+        .select("user_id, streak_count, last_celebrated_date")
+        .eq("user_id", body.user_id)
         .maybe_single()
         .execute()
     )
 
-    if result.data:
-        row = result.data
-        last_seen = date.fromisoformat(row["last_seen_date"])
+    # Already celebrated today — return unchanged
+    if result.data and result.data["last_celebrated_date"] == body.date:
+        return result.data
 
-        if last_seen < today:
-            delta = (today - last_seen).days
-            new_streak = row["streak_count"] + 1 if delta == 1 else 1
+    current_count = result.data["streak_count"] if result.data else 0
+    new_count = current_count + 1
 
-            supabase.table("user_streaks").update(
-                {"streak_count": new_streak, "last_seen_date": today.isoformat()}
-            ).eq("device_id", device_id).execute()
-
-            return {
-                "streak_count": new_streak,
-                "first_seen_date": row["first_seen_date"],
-                "last_seen_date": today.isoformat(),
-            }
-
-        return {
-            "streak_count": row["streak_count"],
-            "first_seen_date": row["first_seen_date"],
-            "last_seen_date": row["last_seen_date"],
-        }
-
-    # New device
-    supabase.table("user_streaks").insert(
+    supabase.table("streaks").upsert(
         {
-            "device_id": device_id,
-            "streak_count": 1,
-            "last_seen_date": today.isoformat(),
-            "first_seen_date": today.isoformat(),
-        }
+            "user_id": body.user_id,
+            "streak_count": new_count,
+            "last_celebrated_date": body.date,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+        },
+        on_conflict="user_id",
     ).execute()
 
     return {
-        "streak_count": 1,
-        "first_seen_date": today.isoformat(),
-        "last_seen_date": today.isoformat(),
+        "user_id": body.user_id,
+        "streak_count": new_count,
+        "last_celebrated_date": body.date,
     }
